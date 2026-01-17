@@ -50,6 +50,7 @@ if (strpos($script_dir, '/TeachersAttendance') !== false || strpos($script_dir, 
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/chatbot-modern.css">
     
     <!-- Dark mode preference -->
     <script>
@@ -65,7 +66,7 @@ if (strpos($script_dir, '/TeachersAttendance') !== false || strpos($script_dir, 
     
     <!-- Header Navigation -->
     <header class="sticky-top shadow-sm">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(90deg, #0066ff, #1c1c1c);">
             <div class="container">
                 <a class="navbar-brand d-flex align-items-center" href="<?php echo $base_path; ?>/index.php">
                     <i class="fas fa-chalkboard-teacher me-2"></i>
@@ -92,7 +93,7 @@ if (strpos($script_dir, '/TeachersAttendance') !== false || strpos($script_dir, 
                                             $initials = strtoupper(substr($names[0], 0, 1) . (count($names) > 1 ? substr(end($names), 0, 1) : ''));
                                         }
                                         
-                                        if ($profile_image && file_exists($_SERVER['DOCUMENT_ROOT'] . $base_path . '/uploads/profiles/' . $profile_image)):
+                                        if (!empty($profile_image)):
                                         ?>
                                             <img src="<?php echo $base_path; ?>/uploads/profiles/<?php echo htmlspecialchars($profile_image); ?>" 
                                                  alt="Profile" 
@@ -134,7 +135,7 @@ if (strpos($script_dir, '/TeachersAttendance') !== false || strpos($script_dir, 
         
         <?php if (isset($_SESSION['user_id'])): ?>
         <!-- Secondary Navigation -->
-        <div class="bg-white border-bottom">
+        <div class="bg-light border-bottom border-primary border-opacity-25">
             <div class="container">
                 <ul class="nav nav-underline">
                     <?php if ($_SESSION['role'] === 'admin'): ?>
@@ -155,7 +156,7 @@ if (strpos($script_dir, '/TeachersAttendance') !== false || strpos($script_dir, 
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?php echo $base_path; ?>/teacher/qrcode.php">
+                            <a class="nav-link" href="<?php echo $base_path; ?>/teacher/qr_code.php">
                                 <i class="fas fa-qrcode me-1"></i> My QR Code
                             </a>
                         </li>
@@ -179,3 +180,98 @@ if (strpos($script_dir, '/TeachersAttendance') !== false || strpos($script_dir, 
 
     <!-- Main Content Container -->
     <main id="main-content" class="flex-grow-1">
+
+    <!-- Eofori widget -->
+    <div id="chatbot-widget">
+        <button id="open-chat" class="btn rounded-circle shadow-lg" title="Chat with Assistant" style="position:fixed;right:20px;bottom:20px;z-index:1050;width:60px;height:60px;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);border:none;color:#fff;transition:all 0.3s ease;">
+            <i class="fas fa-robot" style="font-size:24px;"></i>
+        </button>
+
+        <div id="chat-modal" class="card shadow-lg modern-chat-modal">
+            <div class="card-header d-flex justify-content-between align-items-center modern-header">
+                <div class="d-flex align-items-center">
+                    <div class="avatar-container">
+                        <img src="<?php echo $base_path; ?>/assets/img/robot.svg" alt="Eofori" style="width:32px;height:32px;">
+                        <div class="status-indicator online"></div>
+                    </div>
+                    <div class="ml-2">
+                        <strong class="mb-0">Eofori</strong>
+                        <small class="text-muted d-block">Online</small>
+                    </div>
+                </div>
+                <button id="close-chat" class="btn btn-sm btn-link p-0" style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="card-body p-0 modern-chat-body" style="height:350px;overflow:hidden;display:flex;flex-direction:column;">
+                <!-- Help Popup Banner -->
+                <div id="help-popup" class="help-popup-banner" style="display: none;">
+                    <div class="d-flex align-items-center justify-content-center p-2 bg-gradient-primary text-white">
+                        <i class="fas fa-question-circle me-2"></i>
+                        <span class="fw-bold">How may I help you?</span>
+                        <button id="dismiss-help-popup" class="btn btn-sm btn-link text-white ms-auto p-0" style="width:20px;height:20px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fas fa-times fa-xs"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="chat-body" class="flex-grow-1 p-3" style="overflow-y:auto;overflow-x:hidden;">
+                    <div class="welcome-message">
+                        <div class="text-center py-3">
+                            <i class="fas fa-robot fa-2x text-primary mb-2"></i>
+                            <p class="mb-0 text-muted">🚀 Welcome to Eofori, your smart attendance assistant! I'm here to help you navigate the system effortlessly.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Typing indicator -->
+                <div id="chat-typing" class="typing-indicator" style="display:none;">
+                    <div class="d-flex align-items-center p-3">
+                        <div class="avatar-container mr-2">
+                            <img src="<?php echo $base_path; ?>/assets/img/robot.svg" alt="Eofori" style="width:24px;height:24px;">
+                        </div>
+                        <div class="typing-bubble">
+                            <div class="typing-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggestions -->
+                <div id="chat-suggestions" class="suggestions-container" style="display:none;">
+                    <div class="suggestions-wrapper p-2">
+                        <!-- Suggestions will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer p-3 modern-footer">
+                <div class="input-container">
+                    <div class="input-group">
+                        <textarea id="chat-input" class="form-control modern-input" placeholder="Ask me anything about the system..." autocomplete="off" maxlength="500" rows="1" style="resize: none; min-height: 44px; max-height: 80px;"></textarea>
+                        <button id="chat-send" class="btn btn-primary modern-send-btn" type="button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-1">
+                        <small class="text-muted">
+                            <i class="fas fa-keyboard mr-1"></i>Press Enter to send • Esc to close
+                        </small>
+                        <small id="char-count" class="text-muted char-count" style="font-size: 0.75rem;">500</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>window.BASE_PATH = '<?php echo $base_path; ?>'; window.USER_ROLE = '<?php echo $_SESSION['role'] ?? 'guest'; ?>';</script>
+    <script src="<?php echo $base_path; ?>/assets/js/chatbot.js"></script>
+    <script src="<?php echo $base_path; ?>/assets/js/user-stats.js"></script>
+    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'teacher'): ?>
+    <script src="<?php echo $base_path; ?>/assets/js/teacher-notifications.js"></script>
+    <?php elseif (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+    <script src="<?php echo $base_path; ?>/assets/js/admin-alerts.js"></script>
+    <?php endif; ?>

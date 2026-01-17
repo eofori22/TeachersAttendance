@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         // Handle image upload
         $profile_image = null;
         if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
-            $upload_dir = $_SERVER['DOCUMENT_ROOT'] . $base_path . '/uploads/profiles/';
+            $upload_dir = __DIR__ . '/../uploads/profiles/';
             // Try to create directory if it doesn't exist, but don't fail if we can't
             if (!file_exists($upload_dir)) {
                 @mkdir($upload_dir, 0755, true);

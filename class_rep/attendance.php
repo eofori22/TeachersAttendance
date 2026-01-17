@@ -408,8 +408,39 @@ document.addEventListener('DOMContentLoaded', function() {
         exportBtn.addEventListener('click', function() {
             const month = document.getElementById('month')?.value || '<?= $selected_month ?>';
             const year = document.getElementById('year')?.value || '<?= $selected_year ?>';
-            // For now, just show a message - export API can be created later
-            alert('Export functionality will be available soon. Month: ' + month + ', Year: ' + year);
+            const basePath = '<?= $base_path ?>';
+            
+            // Create dropdown menu for export options
+            const existingDropdown = document.querySelector('.export-dropdown');
+            if (existingDropdown) {
+                existingDropdown.remove();
+                return;
+            }
+            
+            const dropdown = document.createElement('div');
+            dropdown.className = 'export-dropdown position-absolute bg-white border rounded shadow-sm';
+            dropdown.style.cssText = 'top: 100%; right: 0; z-index: 1000; min-width: 150px;';
+            dropdown.innerHTML = `
+                <a href="${basePath}/api/export_attendance.php?format=csv&month=${month}&year=${year}" class="dropdown-item px-3 py-2 text-decoration-none d-block">
+                    <i class="fas fa-file-csv me-2 text-success"></i>Export CSV
+                </a>
+                <a href="${basePath}/api/export_attendance.php?format=pdf&month=${month}&year=${year}" class="dropdown-item px-3 py-2 text-decoration-none d-block" target="_blank">
+                    <i class="fas fa-file-pdf me-2 text-danger"></i>Export PDF
+                </a>
+            `;
+            
+            this.parentElement.style.position = 'relative';
+            this.parentElement.appendChild(dropdown);
+            
+            // Close dropdown when clicking outside
+            setTimeout(() => {
+                document.addEventListener('click', function closeDropdown(e) {
+                    if (!dropdown.contains(e.target) && e.target !== exportBtn) {
+                        dropdown.remove();
+                        document.removeEventListener('click', closeDropdown);
+                    }
+                });
+            }, 100);
         });
     }
 });

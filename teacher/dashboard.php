@@ -12,7 +12,7 @@ if ($_SESSION['role'] !== 'teacher') {
 
 // Get teacher details
 $teacher_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT full_name, email, qr_code FROM users WHERE user_id = ?");
+$stmt = $conn->prepare("SELECT full_name, email, qr_code, profile_image FROM users WHERE user_id = ?");
 $stmt->bind_param("i", $teacher_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -80,11 +80,20 @@ include '../includes/header.php';
                     <div class="d-flex flex-column align-items-center text-center mb-4">
                         <div class="avatar-xl mb-3">
                             <?php 
-                            $initials = '';
-                            $names = explode(' ', $teacher['full_name']);
-                            $initials = strtoupper(substr($names[0], 0, 1) . (count($names) > 1 ? substr(end($names), 0, 1) : ''));
+                            $profile_image = $teacher['profile_image'] ?? null;
+                            if ($profile_image && file_exists($_SERVER['DOCUMENT_ROOT'] . $base_path . '/uploads/profiles/' . $profile_image)):
                             ?>
-                            <span class="avatar-initials bg-primary bg-opacity-10 text-primary rounded-circle"><?= $initials ?></span>
+                                <img src="<?php echo $base_path; ?>/uploads/profiles/<?php echo htmlspecialchars($profile_image); ?>" 
+                                     alt="Profile" 
+                                     class="rounded-circle" 
+                                     style="width: 80px; height: 80px; object-fit: cover;">
+                            <?php else:
+                                $initials = '';
+                                $names = explode(' ', $teacher['full_name']);
+                                $initials = strtoupper(substr($names[0], 0, 1) . (count($names) > 1 ? substr(end($names), 0, 1) : ''));
+                            ?>
+                                <span class="avatar-initials bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 1.5rem; font-weight: 600;"><?= $initials ?></span>
+                            <?php endif; ?>
                         </div>
                         <h5 class="mb-1"><?= htmlspecialchars($teacher['full_name']) ?></h5>
                         <p class="text-muted small mb-2">Teacher</p>
@@ -115,11 +124,42 @@ include '../includes/header.php';
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="<?= $base_path ?>/teacher/request_permission.php">
+                                <i class="fas fa-user-clock me-2"></i> Request Permission
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="<?= $base_path ?>/teacher/profile.php">
                                 <i class="fas fa-user me-2"></i> Profile Settings
                             </a>
                         </li>
                     </ul>
+                    
+                    <hr class="my-3">
+                    
+                    <!-- Notification Settings -->
+                    <div class="card shadow-sm border-0 bg-light">
+                        <div class="card-body">
+                            <h6 class="card-title mb-3">
+                                <i class="fas fa-bell me-2 text-warning"></i>Class Notifications
+                            </h6>
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" id="notification-toggle" checked>
+                                <label class="form-check-label" for="notification-toggle">
+                                    <small>Browser Alerts</small>
+                                </label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="sound-toggle" checked>
+                                <label class="form-check-label" for="sound-toggle">
+                                    <small>Sound Beep</small>
+                                </label>
+                            </div>
+                            <p class="text-muted small mt-3 mb-0">
+                                <i class="fas fa-info-circle me-1"></i>Get alerts when your classes are starting
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -153,7 +193,7 @@ include '../includes/header.php';
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <h6 class="text-uppercase text-muted mb-2">Today's Classes</h6>
-                                    <h3 class="mb-0"><?= count($today_attendance) ?></h3>
+                                    <h3 class="mb-0" id="today-classes-count"><?= count($today_attendance) ?></h3>
                                 </div>
                                 <div class="icon-circle bg-primary bg-opacity-10 text-primary">
                                     <i class="fas fa-chalkboard"></i>
@@ -174,7 +214,7 @@ include '../includes/header.php';
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <h6 class="text-uppercase text-muted mb-2">Weekly Hours</h6>
-                                    <h3 class="mb-0">
+                                    <h3 class="mb-0" id="weekly-hours-count">
                                         <?php
                                         $total_hours = 0;
                                         foreach ($weekly_summary as $day) {
@@ -204,7 +244,7 @@ include '../includes/header.php';
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <h6 class="text-uppercase text-muted mb-2">Classes Taught</h6>
-                                    <h3 class="mb-0"><?= count($upcoming_classes) ?></h3>
+                                    <h3 class="mb-0" id="classes-taught-count"><?= count($upcoming_classes) ?></h3>
                                 </div>
                                 <div class="icon-circle bg-info bg-opacity-10 text-info">
                                     <i class="fas fa-book-open"></i>
@@ -225,7 +265,7 @@ include '../includes/header.php';
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <h6 class="text-uppercase text-muted mb-2">Next Class</h6>
-                                    <h3 class="mb-0">
+                                    <h3 class="mb-0" id="next-class-text">
                                         <?php 
                                         $next_class = $upcoming_classes[0]['schedule'] ?? 'None';
                                         echo $next_class === 'None' ? 'None' : "Tomorrow";
@@ -513,7 +553,7 @@ include '../includes/header.php';
 
 .nav-pills .nav-link.active {
     background-color: rgba(102, 126, 234, 0.1);
-    color: #667eea;
+    color: #0066ff;
     font-weight: 500;
 }
 
@@ -533,5 +573,52 @@ include '../includes/header.php';
     }
 }
 </style>
+
+<script>
+// Notification Settings Toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const notificationToggle = document.getElementById('notification-toggle');
+    const soundToggle = document.getElementById('sound-toggle');
+
+    // Load saved preferences
+    const savedNotification = localStorage.getItem('notificationEnabled');
+    const savedSound = localStorage.getItem('soundEnabled');
+    
+    if (savedNotification !== null) {
+        notificationToggle.checked = savedNotification === 'true';
+    }
+    if (savedSound !== null) {
+        soundToggle.checked = savedSound === 'true';
+    }
+
+    // Handle notification toggle
+    if (notificationToggle) {
+        notificationToggle.addEventListener('change', function() {
+            const enabled = this.checked;
+            localStorage.setItem('notificationEnabled', enabled);
+            
+            if (typeof notificationManager !== 'undefined') {
+                notificationManager.toggleNotifications(enabled);
+            }
+            
+            console.log('Browser notifications:', enabled ? 'enabled' : 'disabled');
+        });
+    }
+
+    // Handle sound toggle
+    if (soundToggle) {
+        soundToggle.addEventListener('change', function() {
+            const enabled = this.checked;
+            localStorage.setItem('soundEnabled', enabled);
+            
+            if (typeof notificationManager !== 'undefined') {
+                notificationManager.toggleSound(enabled);
+            }
+            
+            console.log('Sound notifications:', enabled ? 'enabled' : 'disabled');
+        });
+    }
+});
+</script>
 
 <?php include '../includes/footer.php'; ?>

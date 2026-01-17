@@ -358,8 +358,8 @@ $(document).ready(function() {
 }
 
 .form-control:focus, .form-select:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+    border-color: #0066ff;
+    box-shadow: 0 0 0 0.25rem rgba(0, 102, 255, 0.25);
 }
 
 .btn-outline-primary:hover, .btn-outline-danger:hover {
@@ -367,13 +367,13 @@ $(document).ready(function() {
 }
 
 .btn-outline-primary:hover {
-    background-color: #667eea;
-    border-color: #667eea;
+    background-color: #0066ff;
+    border-color: #0066ff;
 }
 
 .btn-outline-danger:hover {
-    background-color: #dc3545;
-    border-color: #dc3545;
+    background-color: #ef4444;
+    border-color: #ef4444;
 }
 </style>
 

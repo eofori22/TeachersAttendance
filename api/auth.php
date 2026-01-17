@@ -9,7 +9,7 @@ if ($action === 'login') {
     $username = $input['username'];
     $password = $input['password'];
     
-    $stmt = $conn->prepare("SELECT user_id, username, password, role FROM users WHERE username = ?");
+    $stmt = $conn->prepare("SELECT user_id, username, password, role, full_name, profile_image FROM users WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -21,6 +21,8 @@ if ($action === 'login') {
             $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
+            $_SESSION['full_name'] = $user['full_name'];
+            $_SESSION['profile_image'] = $user['profile_image'] ?? null;
             
             // Determine redirect based on role
             $redirect = '';

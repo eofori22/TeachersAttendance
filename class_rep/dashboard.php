@@ -28,7 +28,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 // Get class rep details and class information
-$stmt = $conn->prepare("SELECT u.full_name, u.email, c.class_id, c.class_name 
+$stmt = $conn->prepare("SELECT u.full_name, u.email, u.profile_image, c.class_id, c.class_name 
 FROM users u 
 LEFT JOIN classes c ON u.user_id = c.class_rep_id 
 WHERE u.user_id = ?");
@@ -120,13 +120,22 @@ if (!$user || !isset($user['class_id']) || empty($user['class_id'])) {
                     <div class="d-flex flex-column align-items-center text-center mb-4">
                         <div class="avatar-xl mb-3">
                             <?php 
-                            $initials = '';
-                            if (!empty($user) && isset($user['full_name'])) {
-                                $names = explode(' ', $user['full_name']);
-                                $initials = strtoupper(substr($names[0], 0, 1) . (count($names) > 1 ? substr(end($names), 0, 1) : ''));
-                            }
+                            $profile_image = !empty($user) ? ($user['profile_image'] ?? null) : null;
+                            if ($profile_image && file_exists($_SERVER['DOCUMENT_ROOT'] . $base_path . '/uploads/profiles/' . $profile_image)):
                             ?>
-                            <span class="avatar-initials bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 1.5rem;"><?= $initials ?></span>
+                                <img src="<?php echo $base_path; ?>/uploads/profiles/<?php echo htmlspecialchars($profile_image); ?>" 
+                                     alt="Profile" 
+                                     class="rounded-circle" 
+                                     style="width: 80px; height: 80px; object-fit: cover;">
+                            <?php else:
+                                $initials = '';
+                                if (!empty($user) && isset($user['full_name'])) {
+                                    $names = explode(' ', $user['full_name']);
+                                    $initials = strtoupper(substr($names[0], 0, 1) . (count($names) > 1 ? substr(end($names), 0, 1) : ''));
+                                }
+                            ?>
+                                <span class="avatar-initials bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 1.5rem;"><?= $initials ?></span>
+                            <?php endif; ?>
                         </div>
                         <h5 class="mb-1"><?= htmlspecialchars(!empty($user) && isset($user['full_name']) ? $user['full_name'] : 'N/A') ?></h5>
                         <p class="text-muted small mb-2">Class Representative</p>
@@ -197,7 +206,7 @@ if (!$user || !isset($user['class_id']) || empty($user['class_id'])) {
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <h6 class="text-uppercase text-muted mb-2">Today's Scans</h6>
-                                    <h3 class="mb-0"><?= count($today_scans) ?></h3>
+                                    <h3 class="mb-0" id="today-scans-count"><?= count($today_scans) ?></h3>
                                 </div>
                                 <div class="icon-circle bg-primary bg-opacity-10 text-primary">
                                     <i class="fas fa-qrcode"></i>
@@ -218,7 +227,7 @@ if (!$user || !isset($user['class_id']) || empty($user['class_id'])) {
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <h6 class="text-uppercase text-muted mb-2">Weekly Scans</h6>
-                                    <h3 class="mb-0">
+                                    <h3 class="mb-0" id="weekly-scans-count">
                                         <?= array_sum(array_column($weekly_summary, 'scan_count')) ?>
                                     </h3>
                                 </div>
@@ -241,7 +250,7 @@ if (!$user || !isset($user['class_id']) || empty($user['class_id'])) {
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <h6 class="text-uppercase text-muted mb-2">Today's Teachers</h6>
-                                    <h3 class="mb-0"><?= count($today_schedule) ?></h3>
+                                    <h3 class="mb-0" id="today-teachers-count"><?= count($today_schedule) ?></h3>
                                 </div>
                                 <div class="icon-circle bg-info bg-opacity-10 text-info">
                                     <i class="fas fa-chalkboard-teacher"></i>
@@ -262,7 +271,7 @@ if (!$user || !isset($user['class_id']) || empty($user['class_id'])) {
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
                                     <h6 class="text-uppercase text-muted mb-2">Pending Scans</h6>
-                                    <h3 class="mb-0">
+                                    <h3 class="mb-0" id="pending-scans-count">
                                         <?= max(0, count($today_schedule) - count($today_scans)) ?>
                                     </h3>
                                 </div>

@@ -648,8 +648,8 @@ $(document).ready(function() {
 }
 
 .form-control:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+    border-color: #0066ff;
+    box-shadow: 0 0 0 0.25rem rgba(0, 102, 255, 0.25);
 }
 
 .btn-outline-primary:hover, .btn-outline-danger:hover, .btn-outline-info:hover {
@@ -657,15 +657,15 @@ $(document).ready(function() {
 }
 
 .btn-outline-primary:hover {
-    background-color: #667eea;
+    background-color: #0066ff;
 }
 
 .btn-outline-danger:hover {
-    background-color: #dc3545;
+    background-color: #ef4444;
 }
 
 .btn-outline-info:hover {
-    background-color: #17a2b8;
+    background-color: #06b6d4;
 }
 
 /* Responsive table adjustments */

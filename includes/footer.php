@@ -1,7 +1,7 @@
         </main>
         
         <!-- Footer -->
-        <footer class="bg-dark text-white py-4 mt-auto">
+        <footer class="text-white py-4 mt-auto" style="background: linear-gradient(135deg, #1c1c1c, #0f172a);">
             <div class="container">
                 <div class="row g-4">
                     <div class="col-md-4">
@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 
-                <hr class="my-4 border-secondary">
+                <hr class="my-4 border-primary border-opacity-25">
                 
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
                     <div class="mb-3 mb-md-0">
@@ -60,7 +60,7 @@
         </footer>
         
         <!-- Back to Top Button -->
-        <button type="button" class="btn btn-primary btn-back-to-top shadow rounded-circle" aria-label="Back to top">
+        <button type="button" class="btn btn-back-to-top shadow rounded-circle" style="background: #0066ff; color: white;" aria-label="Back to top">
             <i class="fas fa-arrow-up"></i>
         </button>
         

@@ -82,12 +82,12 @@
 }
 
 .form-control:focus {
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
-    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.2);
+    border-color: #0066ff;
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0066ff 0%, #1c1c1c 100%);
     border: none;
     border-radius: 8px;
     padding: 12px;
@@ -96,7 +96,7 @@
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 5px 15px rgba(0, 102, 255, 0.4);
 }
 
 .toggle-password {

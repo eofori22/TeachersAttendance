@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 .nav-pills .nav-link.active {
     background-color: rgba(102, 126, 234, 0.1);
-    color: #667eea;
+    color: #0066ff;
     font-weight: 500;
 }
 </style>

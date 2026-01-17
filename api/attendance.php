@@ -47,10 +47,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Process the scan
     try {
-        $teacher_id = intval($input['qr_code']); // Assuming QR contains teacher ID
+        $qr_code = trim($input['qr_code']);
         $class_id = intval($input['class_id']);
         $action = $input['action'] === 'time_in' ? 'time_in' : 'time_out';
         $now = date('Y-m-d H:i:s');
+        
+        // First, look up the teacher by QR code
+        $teacher_lookup = $conn->prepare("SELECT user_id FROM users WHERE qr_code = ?");
+        $teacher_lookup->bind_param("s", $qr_code);
+        $teacher_lookup->execute();
+        $teacher_result = $teacher_lookup->get_result();
+        
+        if ($teacher_result->num_rows === 0) {
+            echo json_encode([
+                'success' => false, 
+                'message' => 'Invalid QR code. Teacher not found.'
+            ]);
+            exit();
+        }
+        
+        $teacher = $teacher_result->fetch_assoc();
+        $teacher_id = intval($teacher['user_id']);
         
         if ($action === 'time_in') {
             // Check if already timed in today

@@ -127,12 +127,10 @@ if (!$class) {
         </div>
     </div>
 
-    // ... [Previous PHP and HTML code remains the same until the JavaScript] ...
-
-  <script type="module">
-    import QrScanner from "https://cdn.jsdelivr.net/npm/qr-scanner@1.4.1/qr-scanner.min.js";
-    window.QrScanner = QrScanner;
-</script>
+    <script type="module">
+        import QrScanner from "https://cdn.jsdelivr.net/npm/qr-scanner@1.4.1/qr-scanner.min.js";
+        window.QrScanner = QrScanner;
+    </script>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {

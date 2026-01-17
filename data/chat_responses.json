@@ -1,0 +1,77 @@
+{
+  "default": "I didn't understand that. Try: 'help', 'export', 'manage teachers', 'qr'.",
+  "responses": [
+    {
+      "keywords": ["hello", "hi", "hey", "greetings", "good morning", "good afternoon", "good evening"],
+      "reply": "Hello! 👋 I'm Eofori, here to help you with the Teachers Attendance system. What would you like to know?"
+    },
+    {
+      "keywords": ["help", "what can you do", "commands", "options"],
+      "reply": "I can help you with:\n• 📊 Exporting attendance data\n• 👨‍🏫 Managing teachers and classes\n• 📱 QR code generation and scanning\n• 📝 Viewing attendance records\n• ⚙️ Profile management\n• 📋 Schedule and assignments\n\nJust ask me anything about these topics!"
+    },
+    {
+      "keywords": ["export", "export attendance", "download", "csv", "excel"],
+      "reply": "📊 To export attendance data:\n1. Go to Admin Dashboard\n2. Click 'Export Attendance'\n3. Select date range (optional)\n4. Choose format (CSV/Excel)\n5. Click 'Export'\n\nThe file will download automatically with all attendance records."
+    },
+    {
+      "keywords": ["manage teachers", "teachers", "add teacher", "edit teacher", "delete teacher"],
+      "reply": "👨‍🏫 To manage teachers:\n1. Go to Admin Dashboard\n2. Click 'Manage Teachers'\n3. Add new teachers with their details\n4. Edit existing teacher information\n5. Assign teachers to classes\n\nAll changes are saved automatically."
+    },
+    {
+      "keywords": ["manage classes", "classes", "add class", "edit class", "delete class"],
+      "reply": "🏫 To manage classes:\n1. Go to Admin Dashboard\n2. Click 'Manage Classes'\n3. Create new classes with details\n4. Assign teachers to classes\n5. Set class schedules\n\nClasses can have multiple teachers and schedules."
+    },
+    {
+      "keywords": ["profile", "profile image", "upload profile", "upload image", "change photo"],
+      "reply": "📸 To update your profile:\n1. Go to your Profile page\n2. Click 'Choose File' to select an image\n3. Click 'Upload' to save\n4. Images are stored securely in /uploads/profiles/\n\nSupported formats: JPG, PNG, GIF (max 2MB)"
+    },
+    {
+      "keywords": ["qr", "qr code", "generate qr", "my qr"],
+      "reply": "📱 For QR codes:\n• Teachers: Go to Teacher Dashboard → QR Code to view your personal QR\n• Class Reps: Go to Class Rep Dashboard → Scan QR to mark attendance\n• Make sure your device camera has permission to scan"
+    },
+    {
+      "keywords": ["scan", "scan qr", "scanning", "camera", "mark attendance"],
+      "reply": "📱 To scan QR codes:\n1. Go to Class Rep Dashboard → Scan QR\n2. Allow camera permission when prompted\n3. Point camera at teacher's QR code\n4. Click 'Time In' or 'Time Out' as needed\n\nWorks on mobile and desktop browsers!"
+    },
+    {
+      "keywords": ["attendance", "today attendance", "view attendance", "records"],
+      "reply": "📝 To view attendance:\n• Dashboard shows today's attendance summary\n• Admin can see all records and statistics\n• Teachers can view their own attendance\n• Class reps can see attendance they marked\n\nUse filters to find specific records."
+    },
+    {
+      "keywords": ["schedule", "my schedule", "classes today", "upcoming"],
+      "reply": "📅 To view your schedule:\n• Teachers: Dashboard shows your classes\n• Class Reps: Dashboard shows assigned classes\n• Check 'Upcoming Classes' section\n• Schedules update automatically"
+    },
+    {
+      "keywords": ["permission", "absence", "absent", "request permission", "leave"],
+      "reply": "📝 To request permission for absence:\n1. Go to Teacher Dashboard → Request Permission\n2. Fill in the absence date and reason\n3. Submit your request for admin approval\n\nYour request will be reviewed by an administrator. You can check the status in your request history."
+    },
+    {
+      "keywords": ["login", "log in", "signin", "sign in", "password", "forgot password"],
+      "reply": "🔐 Login help:\n• Use your assigned username/email\n• Password is case-sensitive\n• Contact admin if you forgot your password\n• Make sure you're using the correct role (Admin/Teacher/Class Rep)"
+    },
+    {
+      "keywords": ["stats", "statistics", "reports", "analytics"],
+      "reply": "📊 Statistics & Reports:\n• Admin Dashboard shows overall stats\n• View attendance rates by teacher/class\n• Export detailed reports\n• Monitor system usage and trends"
+    },
+    {
+      "keywords": ["alerts", "notifications", "messages", "admin alerts"],
+      "reply": "🔔 For alerts and notifications:\n• Check the bell icon in the header\n• Admin can send system-wide alerts\n• Teachers get schedule reminders\n• Class reps get attendance notifications"
+    },
+    {
+      "keywords": ["mobile", "phone", "android", "ios", "iphone", "browser"],
+      "reply": "📱 Mobile support:\n• Works on all modern mobile browsers\n• Camera access required for QR scanning\n• Use Chrome/Safari for best experience\n• Enable camera permissions when prompted"
+    },
+    {
+      "keywords": ["error", "problem", "issue", "not working", "bug"],
+      "reply": "⚠️ Having issues?\n• Try refreshing the page (Ctrl+F5)\n• Clear browser cache and cookies\n• Check your internet connection\n• Contact admin if problems persist\n• Include error messages when reporting"
+    },
+    {
+      "keywords": ["thank you", "thanks", "thank"],
+      "reply": "You're welcome! 😊 Happy to help with your attendance system. Is there anything else I can assist you with?"
+    },
+    {
+      "keywords": ["bye", "goodbye", "see you", "later"],
+      "reply": "Goodbye! 👋 Feel free to chat anytime you need help with the Teachers Attendance system."
+    }
+  ]
+}
